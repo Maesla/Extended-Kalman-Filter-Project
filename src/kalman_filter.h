@@ -20,6 +20,9 @@ public:
   // measurement matrix
   Eigen::MatrixXd H_;
 
+  // measurement matrix
+   Eigen::MatrixXd Hj_;
+
   // measurement covariance matrix
   Eigen::MatrixXd R_;
 
@@ -45,6 +48,9 @@ public:
   void Init(Eigen::VectorXd &x_in, Eigen::MatrixXd &P_in, Eigen::MatrixXd &F_in,
       Eigen::MatrixXd &H_in, Eigen::MatrixXd &R_in, Eigen::MatrixXd &Q_in);
 
+
+	void UpdateF(float dt);
+	void UpdateQ(float dt, float noise_ax, float noise_ay);
   /**
    * Prediction Predicts the state and the state covariance
    * using the process model
@@ -63,6 +69,11 @@ public:
    * @param z The measurement at k+1
    */
   void UpdateEKF(const Eigen::VectorXd &z);
+
+private:
+  void CalculateJacobian();
+  Eigen::VectorXd TransformStateFromCartesian2Polar();
+  Eigen::VectorXd KeepRhoInRangeMinusPiAndPi(const Eigen::VectorXd &y);
 
 };
 
